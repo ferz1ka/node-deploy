@@ -14,6 +14,18 @@ app.get('/users', async () => {
   return { users }
 })
 
+app.get('/users/:id', async (req, res) => {
+  const getUserSchema = z.object({
+    id: z.string().cuid()
+  })
+
+  const { id } = getUserSchema.parse(req.params)
+  const user = await prisma.user.findUnique({ where: { id } })
+
+  if (!user) return res.status(404).send({ message: 'User not found' })
+  return { user }
+})
+
 app.post('/users', async (req, res) => {
   const createUserSchema = z.object({
     name: z.string(),
@@ -29,7 +41,6 @@ app.post('/users', async (req, res) => {
   })
 
   return res.status(201).send()
-
 })
 
 app.listen({
