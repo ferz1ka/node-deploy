@@ -5,6 +5,10 @@ import { z } from 'zod'
 const app = fastify()
 const prisma = new PrismaClient()
 
+app.get('/', () => {
+  return "nodedeploy is up!"
+})
+
 app.get('/users', async () => {
   const users = await prisma.user.findMany()
   return { users }
